@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] LayerMask groundCheckLayer;
 
 	private bool isGround;
+	private int groundCount;
 
 	private void OnMove(InputValue value)
 	{
@@ -99,7 +100,8 @@ public class PlayerController : MonoBehaviour
 		// 확장 매서드를 만듬
 		if(groundCheckLayer.Contain(collision.gameObject.layer))
 		{
-			isGround = true;
+			groundCount++;
+			isGround = groundCount > 0;
 			animator.SetBool("IsGround" , isGround);
 		}
 	}
@@ -108,7 +110,8 @@ public class PlayerController : MonoBehaviour
 	{
 		if (groundCheckLayer.Contain(collision.gameObject.layer))
 		{
-			isGround = false;
+			groundCount--;
+			isGround = groundCount > 0;
 			animator.SetBool("IsGround", isGround);
 		}
 	}
