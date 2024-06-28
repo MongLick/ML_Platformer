@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] Rigidbody2D rigid;
 	[SerializeField] SpriteRenderer render;
 	[SerializeField] Animator animator;
-
+	
 	[Header("Property")]
 	[SerializeField] Vector2 moveDir;
 	[SerializeField] float moveSpeed;
@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] float maxYSpeed;
 	[SerializeField] float maxXSpeed;
 	[SerializeField] float jumpSpeed;
+	[SerializeField] LayerMask groundCheckLayer;
 
 	private bool isGround;
 
@@ -88,13 +89,27 @@ public class PlayerController : MonoBehaviour
 		Move();
 	}
 
-	private void OnCollisionEnter2D(Collision2D collision)
+	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		isGround = true;
+		/*if(((1 << collision.gameObject.layer) & groundCheckLayer) != 0)
+		{
+			// 원리는 이거임
+		}*/
+
+		// 확장 매서드를 만듬
+		if(groundCheckLayer.Contain(collision.gameObject.layer))
+		{
+			isGround = true;
+			animator.SetBool("IsGround" , isGround);
+		}
 	}
 
-	private void OnCollisionExit2D(Collision2D collision)
+	private void OnTriggerExit2D(Collider2D collision)
 	{
-		isGround = false;
+		if (groundCheckLayer.Contain(collision.gameObject.layer))
+		{
+			isGround = false;
+			animator.SetBool("IsGround", isGround);
+		}
 	}
 }
